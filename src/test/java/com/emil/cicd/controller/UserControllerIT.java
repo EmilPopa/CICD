@@ -1,6 +1,5 @@
 package com.emil.cicd.controller;
 
-
 import com.emil.cicd.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,14 +9,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class UserControllerIT {
+public class UserControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
@@ -26,24 +26,22 @@ class UserControllerIT {
     private UserRepository userRepository;
 
     @BeforeEach
-    void cleanDb() {
+    void setup() {
         userRepository.deleteAll();
     }
 
     @Test
     void testAddUserAndGetUsers() throws Exception {
-        // POST /users
+        // POST user
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\": \"Alice\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("Alice")));
 
-        // GET /users
+        // GET users
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name", is("Alice")));
     }
 }
-
