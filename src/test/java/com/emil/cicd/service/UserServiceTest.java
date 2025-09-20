@@ -12,7 +12,7 @@ import org.mockito.Mockito;
 import java.util.List;
 import java.util.Arrays;
 
-public class UserServiceTestUT {
+public class UserServiceTest {
     private UserRepository repo;
     private UserService service;
     private User user;
